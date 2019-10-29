@@ -32,10 +32,50 @@ generateEl.addEventListener('click', () => {
         length)
 })
 
+//copy password to clipboard
+clipboardEl.addEventListener('click', () => {
+    const textarea = document.createElement('textarea')
+    const password = resultEl.innerText
+
+    if(!password){
+        return 
+    }
+
+    textarea.value = password
+    document.body.appendChild(textarea)
+    textarea.select()
+    document.execCommand('copy')
+    textarea.remove()
+    alert('Password copied to clipboard!')
+})
+
 //generate password function 
 function generatePassword(lower, upper, number, symbol, length) {
+    //init pw vars
+    //filter out unchecked types
+    //loop over length call generator function for each type
+    //add final pw to pw var and return
+    let generatedPassword = ''
+    const typesCount = lower + upper + number + symbol
 
+    const typesArray = [{ lower }, { upper }, { number }, { symbol }]
+    .filter(item => Object.values(item)[0])
 
+    if(typesCount === 0 ){
+        return ''
+    }
+
+    for(let i = 0; i < length; i += typesCount){
+        typesArray.forEach(type => {
+            const funcName = Object.keys(type)[0]
+            console.log('funcName: ', funcName)
+
+            generatedPassword += randomFunc[funcName]()
+        })
+    }
+
+    const finalPassword = generatedPassword.slice(0, length)
+    return finalPassword
 }
 
 //generator functions
